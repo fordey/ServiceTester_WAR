@@ -32,7 +32,7 @@ mipScenarios:
   
 request:
   userid: 83186
-  url: http://10.30.67.132:20420/plserver
+  url: http://xx.xx.xx.xxx:xxxxx/xxxxxxxx
   read-timeout: 300000
   connection-timeout: 200000
   
@@ -62,7 +62,7 @@ mongodb:
   
 request:
   userid: 83186
-  url: http://10.30.67.132:20430/plserver
+  url: http://xx.xx.xx.xxx:xxxxx/xxxxxxxx
   
 mipScenarios:
   resultslocation: E:\mas2\tools\MIPTester\results\
