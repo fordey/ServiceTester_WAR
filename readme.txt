@@ -14,5 +14,5 @@ Demonstrates:
 -XStream
 -twitter bootstrap
 -thymeleaf
--jquery
--ajax
+-jquery + ajax
+
