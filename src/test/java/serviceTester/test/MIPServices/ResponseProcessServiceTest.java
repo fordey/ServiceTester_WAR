@@ -43,7 +43,7 @@ public class ResponseProcessServiceTest {
 	
 	@Test
 	public void test() throws Exception{		
-		Object o = requestProcessor.returnMIPObjectFromXML(xmlString);
+		Object o = requestProcessor.returnObjectFromXML(xmlString, MIP871Response.class);
 		
 		
 		MIP871Response mipResponse = (MIP871Response) o;

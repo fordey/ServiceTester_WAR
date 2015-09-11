@@ -148,7 +148,7 @@ layout:decorator="layout">
 						
 	                	<div class="btn-group">
 	                		<div class="pull-left" th:switch="${filter_status}">
-	                			<input type="button" id="sendTestsbtn" class="btn btn-primary" onclick="doAjaxLoad('triggerTests', 'statusWrapper', 'ajax_response')" value="Send Tests"/>
+	                			<input type="button" id="sendTestsbtn" class="btn btn-primary" onclick="doAjaxLoad('triggerTests', 'reload_frag', 'ajax_response')" value="Send Tests"/>
 	                			
 	                			<input type="button" id="exportTestsbtn" class="btn btn-primary" onclick="doAjaxLoad('exportToExcel', 'statusWrapper', 'ajax_response')" value="Export Loaded Scenarios"/>
 	                			                			
@@ -187,6 +187,11 @@ layout:decorator="layout">
 	          										th:href="@{scenarioDetails.htm(scenarioId=${scenario.scenarioId})}"
 	          										th:text="${scenario.desc}|">Scenario Description</a>
 	      										</td>
+	      										<div th:switch="${scenario.errorNode.responseCode}">
+	      											<td th:case="-1"/>
+	      											<td class="alert-success" th:case="0">SUCCESS</td>
+	      											<td class="alert-danger" th:case="*" th:text=" 'error code : ' + ${scenario.errorNode.responseCode} + ' error msg : ' + ${scenario.errorNode.errorMsg}" />
+	      										</div>
 	               							</tr>
 	               					</tbody>
 	               				</table>

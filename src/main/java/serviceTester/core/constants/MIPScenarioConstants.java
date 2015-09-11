@@ -6,6 +6,8 @@ public class MIPScenarioConstants {
 		//disabling default constructor
 	}
 	
+	public static final Integer SUCCESS = 0;
+	
 	public static final String COLLECTION_MIP = "mipScenariosTestRun";
 	public static final String COLLECTION_FILTER = "mipFilterFields";
 	

@@ -106,7 +106,7 @@ public class HomeController extends AbstractSiteController {
 		
 		logger.info("{} tests processed", processedCount);
 		
-		return "serviceTests::test_response";
+		return "serviceTests::reload_frag";
 	}
 	
 	

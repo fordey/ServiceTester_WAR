@@ -31,8 +31,7 @@ public class WebServiceClientImpl implements WebServiceClient {
 	@Override
 	public String sendReceive(String payload) throws Exception {
 		String responseString;
-		//Document dom;
-		
+				
 		HttpURLConnection httpUrlConnection = null;
 		try{
 			httpUrlConnection = (HttpURLConnection) new URL(url).openConnection();
@@ -43,12 +42,10 @@ public class WebServiceClientImpl implements WebServiceClient {
 			httpUrlConnection.setConnectTimeout(Integer.parseInt(connectionTimeOut));
 			httpUrlConnection.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
 
-			System.out.println("Connecting...");
+			logger.info("Connecting...");
 			httpUrlConnection.getOutputStream().write(payload.getBytes("UTF-8"));
 
-			System.out.println("Connected.. Waiting For Response");
-
-			//responseString = convertStreamToString(httpUrlConnection.getInputStream());
+			logger.info("Connected.. Waiting For Response");
 			
 			responseString = convertStreamToString(httpUrlConnection.getInputStream());
 			

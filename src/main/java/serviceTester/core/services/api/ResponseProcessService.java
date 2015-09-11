@@ -2,5 +2,5 @@ package serviceTester.core.services.api;
 
 public interface ResponseProcessService {
 
-	public Object returnMIPObjectFromXML(String xmlString) throws Exception;
+	public <T> Object returnObjectFromXML(String xmlString, Class<T> responseClass) throws Exception;
 }

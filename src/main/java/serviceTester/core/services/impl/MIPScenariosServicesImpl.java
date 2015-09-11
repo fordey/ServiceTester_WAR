@@ -3,6 +3,7 @@ package serviceTester.core.services.impl;
 import static serviceTester.core.constants.MIPScenarioConstants.MIP_LOAN_TYPE;
 import static serviceTester.core.constants.MIPScenarioConstants.MIP_LOAN_TYPE_COLUMN;
 import static serviceTester.core.constants.MIPScenarioConstants.SCENARIO_WORKSHEET;
+import static serviceTester.core.constants.MIPScenarioConstants.SUCCESS;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import serviceTester.core.constants.MIPScenarioConstants;
+import serviceTester.core.domain.ErrorNode;
 import serviceTester.core.domain.MIPScenario;
 import serviceTester.core.domain.TestRun;
 import serviceTester.core.domain.xStream.MIP871Response;
@@ -80,33 +82,31 @@ public class MIPScenariosServicesImpl implements MipScenariosService {
 	MIPFilterFieldsService filterService;
 
 	@Override
-	public int processTestScenarios(List<MIPScenario> mipScenarios)
-			throws Exception {
+	public int processTestScenarios(List<MIPScenario> mipScenarios){
 
 		int processedCount = 0;
 
 		TestRun testRun = new TestRun();
 
-		logger.debug("Debuging the service requests ... logging messages");
+		logger.debug("Debugging the service requests ... logging messages");
 
 		for (MIPScenario mipScenario : mipScenarios) {
-			String rawRequest = generateScenarioRequest(mipScenario);
-			logger.debug("message .... {}", rawRequest);
+			try{
+				String rawRequest = generateScenarioRequest(mipScenario);
+				logger.debug("message .... {}", rawRequest);
 
-			String xmlString = wsClient.sendReceive(rawRequest);
-			logger.debug("response .... {}", xmlString);
+				String xmlString = wsClient.sendReceive(rawRequest);
+				logger.debug("response .... {}", xmlString);
 
-			MIP871Response response = (MIP871Response) responseProcessor
-					.returnMIPObjectFromXML(xmlString);
+				MIP871Response response = (MIP871Response) responseProcessor
+					.returnObjectFromXML(xmlString, MIP871Response.class);
+				
+				parseResponse(mipScenario, response);
 
-			LinkedHashMap<String, String> reponseMap = extractResponseFields(response);
-
-			mipScenario.setScenarioOutput(reponseMap);
-
-			mipScenario.setScenarioOutOutAsString(ModelConverter
-					.extractFieldsFromHashMap(reponseMap));
-
-			processedCount++;
+				processedCount++;
+			}catch(Exception e){
+				logger.error("error occurred, exception staktrace : {}", e);
+			}
 		}
 
 		logger.debug("testRun completed ... saving results");
@@ -119,6 +119,27 @@ public class MIPScenariosServicesImpl implements MipScenariosService {
 
 	}
 
+	
+	private void parseResponse(MIPScenario scenario, MIP871Response response) throws Exception{
+		int returnCode =response.getReturnCode();
+		
+		ErrorNode errorNode = new ErrorNode();
+		errorNode.setResponseCode(returnCode);
+		errorNode.setErrorMsg(response.getReturnMessage());
+		
+		scenario.setErrorNode(errorNode);
+		
+		if(returnCode == SUCCESS){
+			LinkedHashMap<String, String> reponseMap = extractResponseFields(response);
+			scenario.setScenarioOutput(reponseMap);
+			
+			scenario.setScenarioOutOutAsString(ModelConverter
+					.extractFieldsFromHashMap(reponseMap));
+
+		}
+		
+	}
+	
 	private String generateScenarioRequest(MIPScenario scenario) {
 		String requestPayLoad = buildRequestPayload(scenario);
 		return requestPayLoad;

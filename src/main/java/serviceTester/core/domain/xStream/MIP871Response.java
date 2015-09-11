@@ -22,4 +22,12 @@ public class MIP871Response {
 	public List<Field> getFields(){
 		return MIPCalculation871.getFields();
 	}
+	
+	public int getReturnCode(){
+		return Integer.parseInt(MIPCalculation871.getErrorNode().getErrorCode());
+	}
+	
+	public String getReturnMessage(){
+		return MIPCalculation871.getErrorNode().getErrorMsg();
+	}
 }
